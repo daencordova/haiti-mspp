@@ -1,0 +1,1020 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Real State RESTful API documentation",
+        "version": "1.0.0",
+        "title": "API docs"
+    },
+    "basePath": "/api",
+    "tags": [
+        {"name": "user", "description": "Operations about users"},
+        {"name": "institution", "description": "Operations about institutions"}
+    ],
+    "schemes": ["https", "http"],
+    "paths": {
+        "/user/login": {
+            "post": {
+                "tags": ["user"],
+                "summary": "Logs user into the system",
+                "description": "Logs user into the system",
+                "operationId": "LoginUser",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Log in object",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "username": {
+                                    "type": "string",
+                                    "description": "Username of the user"
+                                },
+                                "password": {
+                                    "type": "string",
+                                    "description": "Password of the user"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "data": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "description": "Id of the user"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "description": "Email of the user"
+                                        },
+                                        "access_token": {
+                                            "type": "string",
+                                            "description": "Access token"
+                                        },
+                                        "refresh_token": {
+                                            "type": "string",
+                                            "description": "Refresh token"
+                                        }
+                                    }
+                                },
+                                "message": {"type": "string"},
+                                "status": {"type": "string"}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    },
+                    "401": {
+                        "description": "Invalid username or password supplied",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    }
+                }
+            }
+        },
+        "/user/info": {
+            "get": {
+                "tags": ["user"],
+                "summary": "Shows user info",
+                "description": "Shows user info",
+                "operationId": "ShowInfoCurrentUser",
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "properties": {
+                                    "data": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "string",
+                                                "description": "Id of the user"
+                                            },
+                                            "email": {
+                                                "type": "string",
+                                                "description": "Email of the user"
+                                            },
+                                            "username": {
+                                                "type": "string",
+                                                "description": "Username of the user"
+                                            },
+                                            "role": {
+                                                "type": "string",
+                                                "description": "Role of the user"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "description": "Time and date created"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "description": "Time and date last updated"
+                                            }
+                                        }
+                                    },
+                                    "message": {"type": "string"},
+                                    "status": {"type": "string"}
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    },
+                    "404": {
+                        "description": "Unable to find this user",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    }
+                }
+            },
+            "patch": {
+                "tags": ["user"],
+                "summary": "Modify user's password",
+                "description": "This resource it allows you to change the user's password",
+                "operationId": "ChangeCurrentUserPassword",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Created user object",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "old_password": {
+                                    "type": "string",
+                                    "description": "Old user password"
+                                },
+                                "new_password": {
+                                    "type": "string",
+                                    "description": "New user password"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {"$ref": "#/definitions/Successes"}
+                    },
+                    "304": {
+                        "description": "Not Modified",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    },
+                    "404": {
+                        "description": "Unable to find this user",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    }
+                }
+            }
+        },
+        "/admin/user/register": {
+            "post": {
+                "tags": ["user"],
+                "summary": "Create user",
+                "description": "This can only be done by the logged in user.",
+                "operationId": "CreateUser",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Created user object",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "fullname": {
+                                    "type": "string",
+                                    "description": "Full name of the user"
+                                },
+                                "username": {
+                                    "type": "string",
+                                    "description": "Username of the user"
+                                },
+                                "email": {
+                                    "type": "string",
+                                    "description": "Email of the user"
+                                },
+                                "password": {
+                                    "type": "string",
+                                    "description": "Password of the user"
+                                },
+                                "role": {
+                                    "type": "string",
+                                    "description": "Role of the user"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created Successfully",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "properties": {
+                                    "data": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "string",
+                                                "description": "Id of the user"
+                                            },
+                                            "fullname": {
+                                                "type": "string",
+                                                "description": "full name of the user"
+                                            },
+                                            "username": {
+                                                "type": "string",
+                                                "description": "Username of the user"
+                                            },
+                                            "email": {
+                                                "type": "string",
+                                                "description": "Email of the user"
+                                            },
+                                            "role": {
+                                                "type": "string",
+                                                "description": "Role of the user"
+                                            },
+                                            "status": {
+                                                "type": "boolean",
+                                                "description": "Status of the user"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "description": "Date and time saved"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "description": "Date and time updated"
+                                            }
+                                        }
+                                    },
+                                    "message": {"type": "string"},
+                                    "status": {"type": "string"}
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    }
+                }
+            }
+        },
+        "/user/refresh_token": {
+            "get": {
+                "tags": ["user"],
+                "summary": "Refreshes user token",
+                "description": "Refreshes user token",
+                "operationId": "RefreshCurrentUserToken",
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "properties": {
+                                    "data": {
+                                        "properties": {
+                                            "token": {
+                                                "type": "string",
+                                                "description": "Token of the user"
+                                            }
+                                        }
+                                    },
+                                    "message": {"type": "string"},
+                                    "status": {"type": "string"}
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    }
+                }
+            }
+        },
+        "/user/logout": {
+            "post": {
+                "tags": ["user"],
+                "summary": "Logs out current logged in user session",
+                "description": "Logs out current logged in user session",
+                "operationId": "LogoutUser",
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {"$ref": "#/definitions/Successes"}
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    }
+                }
+            }
+        },
+        "/admin/user": {
+            "get": {
+                "tags": ["user"],
+                "summary": "Finds all users",
+                "description": "Lists all users with role user stored",
+                "operationId": "ShowAllUsers",
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "string",
+                                                "description": "Id of the user"
+                                            },
+                                            "email": {
+                                                "type": "string",
+                                                "description": "Email of the user"
+                                            },
+                                            "username": {
+                                                "type": "string",
+                                                "description": "Username of the user"
+                                            },
+                                            "role": {
+                                                "type": "string",
+                                                "description": "Role of the user"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "description": "Date and time saved"
+                                            }
+                                        }
+                                    }
+                                },
+                                "message": {"type": "string"},
+                                "status": {"type": "string"}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    },
+                    "404": {
+                        "description": "Unable to find this user",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    }
+                }
+            }
+        },
+        "/admin/user/{userId}": {
+            "get": {
+                "tags": ["user"],
+                "summary": "Finds a user by id",
+                "description": "Returns a user ",
+                "operationId": "GetUserById",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "Id of user to return",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "properties": {
+                                    "data": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "string",
+                                                "description": "Id of the user"
+                                            },
+                                            "email": {
+                                                "type": "string",
+                                                "description": "Email of the user"
+                                            },
+                                            "username": {
+                                                "type": "string",
+                                                "description": "Username of the user"
+                                            },
+                                            "role": {
+                                                "type": "string",
+                                                "description": "Role of the user"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "description": "Time and date created"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "description": "Time and date last updated"
+                                            }
+                                        }
+                                    },
+                                    "message": {"type": "string"},
+                                    "status": {"type": "string"}
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid id supplied",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["user"],
+                "summary": "Deletes a user by id",
+                "description": "Deletes a user by id",
+                "operationId": "DeleteUserById",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "User id to delete",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {"$ref": "#/definitions/Successes"}
+                    },
+                    "400": {
+                        "description": "Invalid id supplied",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    }
+                }
+            }
+        },
+        "/institution": {
+            "get": {
+                "tags": ["institution"],
+                "summary": "Finds all institutions",
+                "description": "Lists all institutions stored",
+                "operationId": "ShowAllInstitutions",
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "string",
+                                                "description": "Id of the institution"
+                                            },
+                                            "code": {
+                                                "type": "string",
+                                                "description": "Code of the institution"
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "description": "Name of the institution"
+                                            },
+                                            "authorising_officer": {
+                                                "type": "string",
+                                                "description": "Authorising officer of the institution"
+                                            },
+                                            "email": {
+                                                "type": "string",
+                                                "description": "Email of the institution"
+                                            },
+                                            "telephone": {
+                                                "type": "string",
+                                                "description": "Telephone of the institution"
+                                            },
+                                            "website": {
+                                                "type": "string",
+                                                "description": "Website of the institution"
+                                            },
+                                            "address": {
+                                                "type": "string",
+                                                "description": "Address of the institution"
+                                            },
+                                            "status": {
+                                                "type": "string",
+                                                "description": "Status of the institution"
+                                            },
+                                            "user_id": {
+                                                "type": "string",
+                                                "description": "User Id that belongs to the institution"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "description": "Date and time saved"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "description": "Date and time updated"
+                                            }
+                                        }
+                                    }
+                                },
+                                "message": {"type": "string"},
+                                "status": {"type": "string"}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    },
+                    "404": {
+                        "description": "Unable to find this user",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    }
+                }
+            },
+            "post": {
+                "tags": ["institution"],
+                "summary": "Create institution",
+                "description": "Creates a new institution",
+                "operationId": "CreateInstitution",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Created institution object",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "code": {
+                                    "type": "string",
+                                    "description": "Code of the institution"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "description": "Name of the institution"
+                                },
+                                "authorising_officer": {
+                                    "type": "string",
+                                    "description": "Authorising officer of the institution"
+                                },
+                                "email": {
+                                    "type": "string",
+                                    "description": "Email of the institution"
+                                },
+                                "telephone": {
+                                    "type": "string",
+                                    "description": "Telephone of the institution"
+                                },
+                                "website": {
+                                    "type": "string",
+                                    "description": "Website of the institution"
+                                },
+                                "address": {
+                                    "type": "string",
+                                    "description": "Address of the institution"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created Successfully",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "properties": {
+                                    "data": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "string",
+                                                "description": "Id of the institution"
+                                            },
+                                            "code": {
+                                                "type": "string",
+                                                "description": "Code of the institution"
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "description": "Name of the institution"
+                                            },
+                                            "authorising_officer": {
+                                                "type": "string",
+                                                "description": "Authorising officer of the institution"
+                                            },
+                                            "email": {
+                                                "type": "string",
+                                                "description": "Email of the institution"
+                                            },
+                                            "telephone": {
+                                                "type": "string",
+                                                "description": "Telephone of the institution"
+                                            },
+                                            "website": {
+                                                "type": "string",
+                                                "description": "Website of the institution"
+                                            },
+                                            "address": {
+                                                "type": "string",
+                                                "description": "Address of the institution"
+                                            },
+                                            "status": {
+                                                "type": "string",
+                                                "description": "Status of the institution"
+                                            },
+                                            "user_id": {
+                                                "type": "string",
+                                                "description": "User Id that belongs to the institution"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "description": "Date and time saved"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "description": "Date and time updated"
+                                            }
+                                        }
+                                    },
+                                    "message": {"type": "string"},
+                                    "status": {"type": "string"}
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    }
+                }
+            }
+        },
+        "/institution/{institutionId}": {
+            "get": {
+                "tags": ["institution"],
+                "summary": "Finds a institution by id",
+                "description": "Returns a institution",
+                "operationId": "GetInstitutionById",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "institutionId",
+                        "in": "path",
+                        "description": "Id of the institution to return",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "properties": {
+                                    "data": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "string",
+                                                "description": "Id of the institution"
+                                            },
+                                            "code": {
+                                                "type": "string",
+                                                "description": "Code of the institution"
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "description": "Name of the institution"
+                                            },
+                                            "authorising_officer": {
+                                                "type": "string",
+                                                "description": "Authorising officer of the institution"
+                                            },
+                                            "email": {
+                                                "type": "string",
+                                                "description": "Email of the institution"
+                                            },
+                                            "telephone": {
+                                                "type": "string",
+                                                "description": "Telephone of the institution"
+                                            },
+                                            "website": {
+                                                "type": "string",
+                                                "description": "Website of the institution"
+                                            },
+                                            "address": {
+                                                "type": "string",
+                                                "description": "Address of the institution"
+                                            },
+                                            "status": {
+                                                "type": "string",
+                                                "description": "Status of the institution"
+                                            },
+                                            "user_id": {
+                                                "type": "string",
+                                                "description": "User Id that belongs to the institution"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "description": "Date and time saved"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "description": "Date and time updated"
+                                            }
+                                        }
+                                    },
+                                    "message": {"type": "string"},
+                                    "status": {"type": "string"}
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid id supplied",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    }
+                }
+            },
+            "patch": {
+                "tags": ["institution"],
+                "summary": "Updates the institution",
+                "description": "Updates the institution by its id",
+                "operationId": "UpdateInstitutionById",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "institutionId",
+                        "in": "path",
+                        "description": "Id of the institution to update",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Updated institution object",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "code": {
+                                    "type": "string",
+                                    "description": "Code of the institution"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "description": "Name of the institution"
+                                },
+                                "authorising_officer": {
+                                    "type": "string",
+                                    "description": "Authorising officer of the institution"
+                                },
+                                "email": {
+                                    "type": "string",
+                                    "description": "Email of the institution"
+                                },
+                                "telephone": {
+                                    "type": "string",
+                                    "description": "Telephone of the institution"
+                                },
+                                "website": {
+                                    "type": "string",
+                                    "description": "Website of the institution"
+                                },
+                                "address": {
+                                    "type": "string",
+                                    "description": "Address of the institution"
+                                },
+                                "status": {
+                                    "type": "boolean",
+                                    "description": "Status of the institution"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "properties": {
+                                    "data": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "string",
+                                                "description": "Id of the institution"
+                                            },
+                                            "code": {
+                                                "type": "string",
+                                                "description": "Code of the institution"
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "description": "Name of the institution"
+                                            },
+                                            "authorising_officer": {
+                                                "type": "string",
+                                                "description": "Authorising officer of the institution"
+                                            },
+                                            "email": {
+                                                "type": "string",
+                                                "description": "Email of the institution"
+                                            },
+                                            "telephone": {
+                                                "type": "string",
+                                                "description": "Telephone of the institution"
+                                            },
+                                            "website": {
+                                                "type": "string",
+                                                "description": "Website of the institution"
+                                            },
+                                            "address": {
+                                                "type": "string",
+                                                "description": "Address of the institution"
+                                            },
+                                            "status": {
+                                                "type": "string",
+                                                "description": "Status of the institution"
+                                            },
+                                            "user_id": {
+                                                "type": "string",
+                                                "description": "User Id that belongs to the institution"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "description": "Date and time saved"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "description": "Date and time updated"
+                                            }
+                                        }
+                                    },
+                                    "message": {"type": "string"},
+                                    "status": {"type": "string"}
+                                }
+                            }
+                        }
+                    },
+                    "304": {
+                        "description": "Not Modified",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    },
+                    "404": {
+                        "description": "Unable to find this user",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["institution"],
+                "summary": "Deletes a institution by id",
+                "description": "Deletes a institution by id",
+                "operationId": "DeleteInstitutionById",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "institutionId",
+                        "in": "path",
+                        "description": "Institution id to delete",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Deleted Successfully",
+                        "schema": {"$ref": "#/definitions/Successes"}
+                    },
+                    "400": {
+                        "description": "Invalid id supplied",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    },
+                    "404": {
+                        "description": "Institution not found",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {"$ref": "#/definitions/Errors"}
+                    }
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "JWT Authorization header using the Bearer scheme. Example: 'Authorization: Bearer {token}'"
+        }
+    },
+    "components": {
+        "responses": {
+            "UnauthorizedError": {"description": "Access token is missing or invalid"}
+        }
+    },
+    "security": [{"Bearer": []}],
+    "definitions": {
+        "Successes": {
+            "type": "object",
+            "properties": {
+                "message": { "type": "string" }, 
+                "status": { "type": "string" }
+            }
+        },
+        "Errors": {
+            "type": "object",
+            "properties": {
+                "message": { "type": "string" }, 
+                "status": { "type": "string" }
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "Find out more about Swagger",
+        "url": "http://swagger.io"
+    }
+}

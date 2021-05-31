@@ -1,0 +1,9 @@
+.venv
+.env
+.vscode
+*.log
+*.pot
+*.pyc
+__pycache__
+deploy-heroku.sh
+requests.txt
